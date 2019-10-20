@@ -10,10 +10,12 @@ project(out_of_controls)
 find_package(catkin REQUIRED COMPONENTS
   mavros
   tf
+
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
+
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -100,7 +102,13 @@ find_package(catkin REQUIRED COMPONENTS
 ## INCLUDE_DIRS: uncomment this if you package contains header files
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
-## DEPENDS: system dependencies of this project that dependent projects also need
+## DEPENDS: system dependencieError at /home/tar/catkin_ws/src/Mission8_OutOfControls/CMakeLists.txt:228 (add_executable):
+#  add_executable cannot create target "flightTest" because another target
+#  with the same name already exists.  The existing target is an executable
+#  created in source directory
+#  "/home/tar/catkin_ws/src/Mission8_OutOfControls".  See documentation for
+#  policy CMP0002 for more details.
+#s of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES flight_pkg
@@ -223,3 +231,6 @@ target_link_libraries(1sonarNoAPI ${catkin_LIBRARIES})
 
 add_executable(flightTest src/flightTest.cpp)
 target_link_libraries(flightTest ${catkin_LIBRARIES})
+
+add_executable(tracking src/tracking.cpp)
+target_link_libraries(tracking ${catkin_LIBRARIES})

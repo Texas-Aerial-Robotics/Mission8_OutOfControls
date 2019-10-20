@@ -15,6 +15,7 @@
 #include <vector>
 #include <ros/duration.h>
 #include <iostream>
+#include <float.h>
 
 
 /**
@@ -54,21 +55,6 @@ struct control_api_waypoint{
 };
 
 
-
-//object tracking
-void set_destination_local(vector<float> vect)
-{
-	vect_angle = atan2(vect[1] / vect[0]);
-
-	tx = vect[0] * cos((-1)*current_heading_g) + vect[1] * sin((-1)*current_heading_g);
-	ty = -vect[0]sin(current_heading_g*(-1)) + vect[1]cos((-1)*current_heading_g);
-	float x = current_pose.pose.position.x + vect[0] * Tx;
-	float y = current_pose.pose.position.y + vect[1] * Ty;
-	float z = current_pose.pose.position.z + vect[2];
-	set_destination(x, y, z, current_heading_g + vect_angle);
-
-
-}
 //get armed state
 void state_cb(const mavros_msgs::State::ConstPtr& msg)
 {
@@ -342,3 +328,23 @@ int init_publisher_subscriber(ros::NodeHandle controlnode)
 
 }
 
+
+//object tracking
+void set_destination_local(std::vector<float> vect)
+{
+
+	float vect_angle = atan2(vect[1], vect[0]);
+
+	//ROS_INFO(current_heading_g);
+	//cout << current_heading_g << endl;
+
+	float tx = vect[0] * cos((-1)*current_heading_g) + vect[1] * sin((-1)*current_heading_g);
+	float ty = -vect[0]*sin(current_heading_g*(-1)) + vect[1]*cos((-1)*current_heading_g);
+	float x = current_pose_g.pose.pose.position.x + vect[0]; //* tx;
+	float y = current_pose_g.pose.pose.position.y + vect[1]; //* ty;
+	float z = current_pose_g.pose.pose.position.z + vect[2];
+	set_destination(x, y, z, current_heading_g + vect_angle);
+	//set_destination(x,y,z,0);
+
+
+}
