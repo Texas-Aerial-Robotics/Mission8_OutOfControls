@@ -7,7 +7,7 @@ before_install:
   - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
   - sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
   - sudo apt-get update
-  - sudo apt-get install -y python-rosdep2 python-wstool python-rosinstall-generator python-catkin-tools ros-melodic-ros-base
+  - sudo apt-get install -y python-rosdep2 python-wstool python-rosinstall-generator python-catkin-tools ros-melodic-desktop
   - source /opt/ros/melodic/setup.bash
   - mkdir -p ~/catkin_ws/src
   - cd ~/catkin_ws
@@ -17,10 +17,12 @@ before_install:
   - rosinstall_generator mavlink | tee -a /tmp/mavros.rosinstall
   - wstool merge -t src /tmp/mavros.rosinstall
   - wstool update -t src
+  - sudo rosdep init
+  - rosdep update
   - rosdep install --from-paths src --ignore-src --rosdistro `echo $ROS_DISTRO` -y
 
-  - source ~/catkin_ws/devel/setup.bash
-install:
-  git clone --depth=2 --branch=master https://github.com/Texas-Aerial-Robotics/Mission8_OutOfControls.git
-  git clone --depth=2 --branch=master https://github.com/mavlink/mavros.git
-script: catkin build
+
+script:
+  - cd src
+  - git clone --depth=2 --branch=master https://github.com/Texas-Aerial-Robotics/Mission8_OutOfControls.git
+  - catkin build out_of_controls
