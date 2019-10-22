@@ -53,28 +53,23 @@ inputs: ros array which contains xzy vector in drone's reference frame
 outputs: nothing n/a
 postcondition: the drone is moving towards the new destion calculated
 */
-void tracking_cb(const geometry_msgs::Point::ConstPtr& tracking){//const std_msgs::String::ConstPtr& tracking
-    // geometry_msgs::Point new_point;
-    // new_point.x = 0;
-    // new_point.y = 1;
-    // new_point.z = 0;
+void tracking_cb(const geometry_msgs::Point::ConstPtr& tracking){
+
 
 
 //rostopic pub /cmd_vel geometry_msgs/Point '{x: 1.0, y: 1.0, z: 1.0}'
-    //input: 
-    //std_msgs::Float32::ConstPtr&
-	//std_msgs::Float32ConstPtr
-	//std_msgs::Float32MultiArray information = *tracking;
+
 	vector<float> location;
-	//float test = trackingdata;
-	//location.push_back(tracking->data);
-	location.push_back(tracking->x);
-	location.push_back(tracking->y);
-	location.push_back(tracking->z);
+
+	location.push_back(tracking->x); // 0
+	location.push_back(tracking->y); // 1
+	location.push_back(tracking->z); // 2
+    //set_destination( 0, 0, 0, 90);
+    //set_heading(180.0);
     ROS_INFO("the information is here: %f",current_heading_g);
-    //cout << current_heading_g << endl;
+
 	set_destination_local(location);
-//rostopic pub /Pointssgs/String 'test'
+
 
 }
 
