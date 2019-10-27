@@ -64,6 +64,9 @@ void tracking_cb(const geometry_msgs::Point::ConstPtr& tracking){
 	location.push_back(tracking->x); // 0
 	location.push_back(tracking->y); // 1
 	location.push_back(tracking->z); // 2
+    cout <<"X: " << location[0] << endl;
+    cout <<"Y: " << location[1] << endl;
+    cout <<"Z: " << location[2] << endl;
     //set_destination( 0, 0, 0, 90);
     //set_heading(180.0);
     ROS_INFO("the information is here: %f",current_heading_g);
