@@ -20,7 +20,7 @@ function setGuided
 		
 
 	#done
-	grep -m 1 'Flight battery 100 percent' <&3
+	grep -m 2 'using GPS' <&3
 #	grep -q -m 2 'using GPS' </tmp/status
 	
 #	sleep 1m # do this if it stilll does not work
@@ -28,6 +28,7 @@ function setGuided
 	roslaunch out_of_controls apm.launch > /dev/null 2>&1 &
 
 	rosrun out_of_controls $package > /dev/tty &
+	#for tracking you do rostopic pub /Points geometry_msgs/Point '{x: -1.0, y: 0.0, z: 0.0}'
 
 	sleep 5
 
