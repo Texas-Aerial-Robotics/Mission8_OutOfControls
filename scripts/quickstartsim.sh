@@ -1,6 +1,12 @@
 #!/bin/bash -x
 
-roslaunch mission8_sim droneOnly.launch &
+package='tracking'
+launchFile='droneOnly.launch'
+if [[ $# == 2 ]]; then
+	package=$1
+	launchFile=$2
+fi
+roslaunch mission8_sim $launchFile &
 
 sleep 5
 
@@ -21,7 +27,7 @@ function setGuided
 	
 	roslaunch out_of_controls apm.launch > /dev/null 2>&1 &
 
-	rosrun out_of_controls tracking > /dev/tty &
+	rosrun out_of_controls $package > /dev/tty &
 
 	sleep 5
 
