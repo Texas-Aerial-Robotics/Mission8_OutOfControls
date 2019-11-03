@@ -333,29 +333,34 @@ int init_publisher_subscriber(ros::NodeHandle controlnode)
 //object tracking
 void set_destination_local(std::vector<float> vect)
 {
-
+	static int YeHaw = 0;
 	float vect_angle = atan2(vect[1], vect[0]) * (180 / M_PI);
 
 	
 	//cout << current_heading_g  << endl;
-	std::cout <<"THE VectANGLE IS: "<< vect_angle << std::endl;
+	
 
-	float tx = (vect[0] * cos((-1) * current_heading_g * (M_PI / 180))) - (vect[1] * sin((-1) * current_heading_g * (M_PI / 180)));
-	float ty = (vect[0] * sin((-1) * current_heading_g * (M_PI / 180))) + (vect[1]* cos((-1) * current_heading_g * (M_PI / 180)));
+	float tx = (vect[0] * cos(current_heading_g * (M_PI / 180))) - (vect[1] * sin(current_heading_g * (M_PI / 180)));
+	float ty = (vect[0] * sin(current_heading_g * (M_PI / 180))) + (vect[1]* cos(current_heading_g * (M_PI / 180)));
 	float x = current_pose_g.pose.pose.position.x + (tx);//* vect[0]  
 	float y = current_pose_g.pose.pose.position.y + (ty);//vect[1] * 
 	float z = current_pose_g.pose.pose.position.z + vect[2];
 
 
-	std::cout << "the vect angle is" << vect_angle << std::endl;
+	std::cout <<"THE VectANGLE IS: "<< vect_angle << std::endl;
 	ROS_INFO("the current heading %f", current_heading_g);
+	std::cout <<"THE heading + 90 - vect_angle: "<< current_heading_g + 90 - vect_angle << std::endl;
+	std::cout <<"current_heading_g + vect_angle - 90: "<< current_heading_g + vect_angle - 90 << std::endl;
 	std::cout << "x is " << x << std::endl;
 	std::cout << "y is " << y << std::endl;
 	std::cout << "z is " << z << std::endl;
 
-	set_destination(x, y, z, 0);// current_heading_g + vect_angle
+	set_destination(x, y, z, current_heading_g + vect_angle - 90);
+
 	//current_heading_g + vect_angle - 90
-	//set_destination(x,y,z,0);
+	// current_heading_g + vect_angle 
+	//current_heading_g + vect_angle - 90
+	//set_destination(x,y,z,0); 
 
 
 }
