@@ -1,3 +1,5 @@
+using namespace std;
+
 const float tol = 1;
 //propGain and derGain will be changed as needed
 const float propGain = 1;
