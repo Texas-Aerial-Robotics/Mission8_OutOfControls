@@ -234,3 +234,6 @@ target_link_libraries(flightTest ${catkin_LIBRARIES})
 
 add_executable(tracking src/tracking.cpp)
 target_link_libraries(tracking ${catkin_LIBRARIES})
+
+add_executable(obs_avoid src/obstacle_avoidance.cpp)
+target_link_libraries(obs_avoid ${catkin_LIBRARIES})

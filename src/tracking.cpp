@@ -57,7 +57,7 @@ void tracking_cb(const geometry_msgs::Point::ConstPtr& tracking){
 
 
 
-//rostopic pub /cmd_vel geometry_msgs/Point '{x: 1.0, y: 1.0, z: 1.0}'
+//rostopic pub /Points geometry_msgs/Point '{x: 1.0, y: 1.0, z: 1.0}'
 
 	vector<float> location;
 

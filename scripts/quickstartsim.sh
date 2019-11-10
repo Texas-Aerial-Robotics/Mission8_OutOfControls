@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-package='tracking'
+package='obs_avoid'
 launchFile='droneOnly.launch'
 if [[ $# == 2 ]]; then
 	package=$1

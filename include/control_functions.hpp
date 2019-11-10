@@ -33,7 +33,9 @@ float current_heading_g;
 float local_offset_g;
 float correction_heading_g = 0;
 
-
+float current_waypoint_x = 0;
+float current_waypoint_y = 0;
+float current_waypoint_z = 0;
 
 ros::Publisher local_pos_pub;
 ros::Subscriber currentPos;
@@ -128,6 +130,10 @@ This function is used to command the drone to fly to a waypoint. These waypoints
 */
 void set_destination(float x, float y, float z, float psi)
 {
+	current_waypoint_x = x;
+	current_waypoint_y = y;
+	current_waypoint_z = z;
+
 	set_heading(psi);
 	//transform map to local
 	float deg2rad = (M_PI/180);
@@ -147,6 +153,28 @@ void set_destination(float x, float y, float z, float psi)
 	local_pos_pub.publish(waypoint_g);
 	
 }
+
+void set_destination_avoid(float x, float y, float z, float psi)
+{
+	set_heading(psi);
+	//transform map to local
+	float deg2rad = (M_PI/180);
+	float Xlocal = x*cos((correction_heading_g + local_offset_g - 90)*deg2rad) - y*sin((correction_heading_g + local_offset_g - 90)*deg2rad);
+	float Ylocal = x*sin((correction_heading_g + local_offset_g - 90)*deg2rad) + y*cos((correction_heading_g + local_offset_g - 90)*deg2rad);
+	float Zlocal = z;
+
+	x = Xlocal + correction_vector_g.position.x;
+	y = Ylocal + correction_vector_g.position.y;
+	z = Zlocal + correction_vector_g.position.z;
+	ROS_INFO("Destination set to x: %f y: %f z: %f origin frame", x, y, z);
+
+	waypoint_g.pose.position.x = x;
+	waypoint_g.pose.position.y = y;
+	waypoint_g.pose.position.z = z;
+
+	local_pos_pub.publish(waypoint_g);
+}
+
 /**
 \ingroup control_functions
 Wait for connect is a function that will hold the program until communication with the FCU is established.
@@ -333,7 +361,6 @@ int init_publisher_subscriber(ros::NodeHandle controlnode)
 //object tracking
 void set_destination_local(std::vector<float> vect)
 {
-	static int YeHaw = 0;
 	float vect_angle = atan2(vect[1], vect[0]) * (180 / M_PI);
 
 	
