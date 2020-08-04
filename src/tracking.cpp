@@ -26,9 +26,10 @@
 #include "control_functions.hpp"
 #include <errno.h>
 #include <string.h>
+#include <std_msgs/Float32MultiArray.h>
+#include <float.h>
 
 using namespace std;
-
 // Set global variables
 mavros_msgs::State current_state;
 geometry_msgs::PoseStamped current_pose;
@@ -45,26 +46,6 @@ vector<float> simSonar;
 int up;
 
 
-//to be changed: function will accept a column of a 2D vector
-void flyTo(float x, float y, float z){
-	set_destination(x,y,z, 0);
-	float tol = .2;
-	ros::Time start = ros::Time::now();
-	while(ros::ok() && !(check_waypoint_reached(tol)) && (ros::Time::now().toSec() - start.toSec() < 60)){
-		if(msg.data == "stop"){
-			break;
-		}
-		if(!(avoid())){
-			set_destination(x,y,z,0);
-			ros::Duration(.5).sleep();
-		}
-		ros::spinOnce();
-		ros::Duration(0.3).sleep();
-	}
-
-    ROS_INFO("Done moving to (%f, %f, %f).", x, y, z);
-
-}
 
 /*
 tracking_cb 
@@ -72,13 +53,24 @@ inputs: ros array which contains xzy vector in drone's reference frame
 outputs: nothing n/a
 postcondition: the drone is moving towards the new destion calculated
 */
-void tracking_cb(const std_msgs::Float32::ConstPtr& tracking){
-	//input: 
-	information = *tracking;
-	vector location;
-	location.push_back(information.data[0].data);
-	location.push_back(information.data[1].data);
-	location.push_back(information.data[2].data);
+void tracking_cb(const geometry_msgs::Point::ConstPtr& tracking){
+
+
+
+//rostopic pub /Points geometry_msgs/Point '{x: 1.0, y: 1.0, z: 1.0}'
+
+	vector<float> location;
+
+	location.push_back(tracking->x); // 0
+	location.push_back(tracking->y); // 1
+	location.push_back(tracking->z); // 2
+    cout <<"X: " << location[0] << endl;
+    cout <<"Y: " << location[1] << endl;
+    cout <<"Z: " << location[2] << endl;
+    //set_destination( 0, 0, 0, 90);
+    //set_heading(180.0);
+    ROS_INFO("the information is here: %f",current_heading_g);
+
 	set_destination_local(location);
 
 
@@ -98,7 +90,7 @@ int main(int argc, char** argv)
     
 
 
-    ros::Subscriber points = nh.subscribe<std_msgs::String>("Points", 5, tracking_cb);
+    ros::Subscriber points = nh.subscribe<geometry_msgs::Point>("Points", 5, tracking_cb);
 
 
     wait4connect();
@@ -109,7 +101,8 @@ int main(int argc, char** argv)
     cout << "local frame" << endl;
 
     ros::spinOnce();
-
+    takeoff(1);
+    ros::spin();
 
     return 0;
 }
